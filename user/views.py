@@ -3,8 +3,10 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from user.serializers import UserSignupSerializer
+from user.jwt_claim_serializer import TurtleTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-# Create your views here.
+
 class UserView(APIView):
     
     # 회원정보 조회
@@ -31,3 +33,7 @@ class UserView(APIView):
     # 회원탈퇴
     def delete(self, request):
         return Response({'msg' : 'delete success!!'})
+    
+    
+class TurtleTokenObtainPairView(TokenObtainPairView):
+    serializer_class = TurtleTokenObtainPairSerializer
