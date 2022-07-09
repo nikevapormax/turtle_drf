@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # 추후 배포 시, 그에 맞는 프론트 주소로 바꿔주어야 함 (현재는 라이브 서버 기준)
 CORS_ALLOWED_ORIGINS = [
-    "htt[://localhost:5500",
+    "http://localhost:5500",
     "http://127.0.0.1:5500",
 ]
 
