@@ -1,6 +1,7 @@
 from django.db import models
 
 class Article(models.Model):
+    user = models.ForeignKey('user.User', verbose_name="작성자", on_delete=models.CASCADE)
     title = models.CharField("제목", max_length=20)
     content = models.TextField("게시글 내용")
     image = models.ImageField("이미지", blank=True)
