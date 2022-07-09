@@ -14,7 +14,12 @@ class UserView(APIView):
     
     # 회원가입
     def post(self, request):
-        return Response({'msg' : 'post success!!'})
+        serialized_data = UserSignupSerializer(data=request.data)
+        
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # 회원정보 수정
     def put(self, request):
