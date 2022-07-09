@@ -48,6 +48,6 @@ class User(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
     class Meta:
-        db_tale = 'user'
+        db_table = 'user'
         
     
