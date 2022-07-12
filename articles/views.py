@@ -15,6 +15,9 @@ class ArticleView(APIView):
         return Response(serialized_data.data, status=status.HTTP_200_OK)
     
     def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({'msg': '로그인해주세요'}, 401)
+        
         user = request.user
         request.data["user"] = user.id
         
