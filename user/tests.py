@@ -28,7 +28,18 @@ class LoginUserTest(APITestCase):
     def setUp(self):
         self.data = {'username': 'user10', 'password': '1010'}
         self.user = User.objects.create_user('user10', '1010')
-        
+    
+    # 로그인 테스트
     def test_login(self):
         response = self.client.post(reverse('token_obtain_pair'), self.data)
         self.assertEqual(response.status_code, 200 )
+    
+    # 회원정보 테스트
+    def test_get_user_data(self):
+        access_token = self.client.post(reverse('token_obtain_pair'), self.data).data['access']
+        response = self.client.get(
+            reverse('user_view'), 
+            HTTP_AUTHORIZATION = f'Bearer {access_token}'
+        )
+        # self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['username'], self.data['username'])
