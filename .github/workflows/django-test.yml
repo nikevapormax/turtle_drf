@@ -1,0 +1,37 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 각 파이썬 버전에 대해 테스트를 진행한다.
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+      # 각 버전에 파이썬의 버전 별로 병렬로 실행하게 된다.
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+        # 원래 pytest가 있었지만 나의 프로젝트에서는 사용하지 않았기 때문에 삭제함
+          pip install flake8 
+        # 나는 requirements.txt가 있기 때문에 바로 실행해주는 것으로 수정
+          pip install -r requirements.txt
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      # pytest를 사용하지 않고 아래의 코드를 사용함(나의 tests.py 사용)
+      - name: Run Tests
+        run: |
+          python manage.py test
