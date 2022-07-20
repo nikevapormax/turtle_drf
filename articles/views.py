@@ -19,9 +19,10 @@ class ArticleView(APIView):
             return Response({'msg': '로그인해주세요'}, 401)
         
         user = request.user
-        request.data["user"] = user.id
+        request = request.data.dict()
+        request["user"] = user.id
         
-        serialized_data = ArticleSerializer(data=request.data)
+        serialized_data = ArticleSerializer(data=request)
         
         if serialized_data.is_valid():
             serialized_data.save()
