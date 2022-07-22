@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  web:
+    # 현재 폴더에 있는 것들을 사용해 빌드하겠다.
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    working_dir: /usr/src/app/
+    volumes:
+      - ./:/usr/src/app/
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+    image: postgres:14.4-alpine
+    volumes:
+      - postgres_db:/var/lib/postgresql/data # named-volume
+    env_file:
+      - ./.env.postgres
+    ports:
+      - "5432:5432"
+
+# named-volume을 사용하기 때문에 아래에서 선언해주어야 함
+volumes:
+  postgres_db:
