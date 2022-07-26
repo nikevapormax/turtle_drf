@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/image
+    ports:
+      - 80:80
+    depends_on:
+      - web
+  web:
+    # 현재 폴더에 있는 것들을 사용해 빌드하겠다.
+    build: .
+    command: gunicorn turtle_drf.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    working_dir: /usr/src/app/
+    volumes:
+      - ./:/usr/src/app/
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/image
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+  db:
+    image: postgres:14.4-alpine
+    volumes:
+      - postgres_db:/var/lib/postgresql/data # named-volume
+    env_file:
+      - ./.env.postgres.prod
+    ports:
+      - "5432:5432"
+
+# named-volume을 사용하기 때문에 아래에서 선언해주어야 함
+volumes:
+  postgres_db:
+  static_volume:
+  media_volume:
